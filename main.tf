@@ -121,7 +121,7 @@ resource "azurerm_application_insights_web_test" "wt" {
     for key, wt in lookup(var.config, "web_tests", {}) : key => wt
   }
 
-  name                    = each.value.name
+  name                    = try(each.value.name, each.key)
   location                = coalesce(lookup(var.config, "location", null), var.location)
   resource_group_name     = coalesce(lookup(var.config, "resource_group", null), var.resource_group)
   application_insights_id = azurerm_application_insights.appi.id

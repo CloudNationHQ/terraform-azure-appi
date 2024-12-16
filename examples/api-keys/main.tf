@@ -25,5 +25,17 @@ module "appi" {
     resource_group   = module.rg.groups.demo.name
     location         = module.rg.groups.demo.location
     application_type = "web"
+
+    api_keys = {
+      read_only_key = {
+        name             = "ReadOnlyKey"
+        read_permissions = ["api"]
+      }
+
+      write_annotations_key = {
+        name              = "WriteAnnotationsKey"
+        write_permissions = ["annotations"]
+      }
+    }
   }
 }

@@ -24,9 +24,14 @@ End-to-end testing is not conducted on these modules, as they are individual com
 
 ## Features
 
-- Creates an Application Insights resource in Azure
-- Add analytics items, api keys, smart detection rules, standard web tests and web tests
-- Export instrumentation key to be used by other modules
+- tracks telemetry such as requests, dependencies, and exceptions.
+- supports sampling rates, data caps, and retention policies.
+- integrates with Log Analytics for centralized log analysis.
+- manages secure access with api keys and configurable permissions.
+- provides alerts using smart detection rules.
+- supports custom analytics queries with shared or private scopes.
+- monitors availability with standard and web Tests.
+- enables dashboards with workbooks and reusable templates.
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
