@@ -18,7 +18,8 @@ module "rg" {
 }
 
 module "appi" {
-  source = "../../"
+  source  = "cloudnationhq/appi/azure"
+  version = "~> 2.0"
 
   config = {
     name             = module.naming.application_insights.name
