@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.3.0](https://github.com/CloudNationHQ/terraform-azure-appi/compare/v2.2.0...v2.3.0) (2024-12-16)
+
+
+### Features
+
+* add support for workbooks and workbook templates ([9665ae0](https://github.com/CloudNationHQ/terraform-azure-appi/commit/9665ae02ba60997ca895f374c24abbcb4b3eb244))
+* add support for workbooks and workbook templates ([2ba2fa8](https://github.com/CloudNationHQ/terraform-azure-appi/commit/2ba2fa8891d7f7191a59ca18d70d0bf322ee32d9))
+* **deps:** bump github.com/gruntwork-io/terratest from 0.47.2 to 0.48.0 in /tests ([611a605](https://github.com/CloudNationHQ/terraform-azure-appi/commit/611a605b617dc8c9ac4713a8147f2a6251924f34))
+* **deps:** bump github.com/gruntwork-io/terratest in /tests ([cbe6cb3](https://github.com/CloudNationHQ/terraform-azure-appi/commit/cbe6cb318a51add0815ae06b2f7fcb700926a38d))
+* **deps:** bump golang.org/x/crypto from 0.29.0 to 0.31.0 in /tests ([d906240](https://github.com/CloudNationHQ/terraform-azure-appi/commit/d906240bc311e68072dba43ea354f74af5b5bb1b))
+* **deps:** bump golang.org/x/crypto from 0.29.0 to 0.31.0 in /tests ([2132a66](https://github.com/CloudNationHQ/terraform-azure-appi/commit/2132a66aacd83d2caeafbc51e769312c3017ff03))
+* fix linting issues ([65e5203](https://github.com/CloudNationHQ/terraform-azure-appi/commit/65e52032d40bac23d229fc8319e992fea2cd4e50))
+
 ## [2.2.0](https://github.com/CloudNationHQ/terraform-azure-appi/compare/v2.1.0...v2.2.0) (2024-11-11)
 
 
