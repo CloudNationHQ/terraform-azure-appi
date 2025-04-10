@@ -142,14 +142,23 @@ resource "azurerm_application_insights_workbook" "wb" {
     for key, workbook in lookup(var.config, "workbooks", {}) : key => workbook
   }
 
-  name                = try(each.value.name, each.key)
-  resource_group_name = coalesce(lookup(var.config, "resource_group", null), var.resource_group)
-  location            = coalesce(lookup(var.config, "location", null), var.location)
-  display_name        = try(each.value.display_name, each.key)
-  description         = try(each.value.description, null)
-  category            = try(each.value.category, "workbook")
-  data_json           = each.value.data_json
-  source_id           = try(lower(lookup(each.value, "source_id", azurerm_application_insights.appi.id)), null)
+  name                 = try(each.value.name, each.key)
+  resource_group_name  = coalesce(lookup(var.config, "resource_group", null), var.resource_group)
+  location             = coalesce(lookup(var.config, "location", null), var.location)
+  display_name         = try(each.value.display_name, each.key)
+  description          = try(each.value.description, null)
+  storage_container_id = try(each.value.storage_container_id, null)
+  category             = try(each.value.category, "workbook")
+  data_json            = each.value.data_json
+  source_id            = try(lower(lookup(each.value, "source_id", azurerm_application_insights.appi.id)), null)
+
+  dynamic "identity" {
+    for_each = lookup(each.value, "identity", null) != null ? [each.value.identity] : []
+    content {
+      type         = "UserAssigned"
+      identity_ids = try(identity.value.identity_ids, null)
+    }
+  }
 
   tags = try(
     var.config.tags, var.tags, {}
