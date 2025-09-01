@@ -11,6 +11,11 @@
 
 * add type definitions and changed data structure ([#27](https://github.com/CloudNationHQ/terraform-azure-appi/issues/27)) ([1b4c499](https://github.com/CloudNationHQ/terraform-azure-appi/commit/1b4c499a25bff366595f3651a14f980f2b3f0d88))
 
+### Upgrade from v2.5.0 to v3.0.0:
+
+- Update module reference to: `version = "~> 3.0"`
+- The property and variable resource_group is renamed to resource_group_name
+
 ## [2.5.0](https://github.com/CloudNationHQ/terraform-azure-appi/compare/v2.4.0...v2.5.0) (2025-04-10)
 
 
