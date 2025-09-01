@@ -1,93 +1,118 @@
 # insights
 resource "azurerm_application_insights" "appi" {
-  name                                  = try(var.config.name, var.naming.application_insights)
-  location                              = coalesce(lookup(var.config, "location", null), var.location)
-  resource_group_name                   = coalesce(lookup(var.config, "resource_group", null), var.resource_group)
-  application_type                      = var.config.application_type
-  daily_data_cap_in_gb                  = try(var.config.daily_data_cap_in_gb, 100)
-  daily_data_cap_notifications_disabled = try(var.config.daily_data_cap_notifications_disabled, false)
-  retention_in_days                     = try(var.config.retention_in_days, 90)
-  sampling_percentage                   = try(var.config.sampling_percentage, 100)
-  disable_ip_masking                    = try(var.config.disable_ip_masking, false)
-  workspace_id                          = try(var.config.workspace_id, null)
-  local_authentication_disabled         = try(var.config.local_authentication_disabled, false)
-  internet_ingestion_enabled            = try(var.config.internet_ingestion_enabled, true)
-  internet_query_enabled                = try(var.config.internet_query_enabled, true)
-  force_customer_storage_for_profiler   = try(var.config.force_customer_storage_for_profiler, false)
+  resource_group_name = coalesce(
+    lookup(
+      var.config, "resource_group_name", null
+    ), var.resource_group_name
+  )
 
-  tags = try(
-    var.config.tags, var.tags, {}
+  location = coalesce(
+    lookup(var.config, "location", null
+    ), var.location
+  )
+
+  name                                  = var.config.name
+  application_type                      = var.config.application_type
+  daily_data_cap_in_gb                  = var.config.daily_data_cap_in_gb
+  daily_data_cap_notifications_disabled = var.config.daily_data_cap_notifications_disabled
+  retention_in_days                     = var.config.retention_in_days
+  sampling_percentage                   = var.config.sampling_percentage
+  disable_ip_masking                    = var.config.disable_ip_masking
+  workspace_id                          = var.config.workspace_id
+  local_authentication_disabled         = var.config.local_authentication_disabled
+  internet_ingestion_enabled            = var.config.internet_ingestion_enabled
+  internet_query_enabled                = var.config.internet_query_enabled
+  force_customer_storage_for_profiler   = var.config.force_customer_storage_for_profiler
+
+  tags = coalesce(
+    var.config.tags, var.tags
   )
 }
 
 # analytics items
 resource "azurerm_application_insights_analytics_item" "analytics_item" {
-  for_each = {
-    for key, analytics_item in lookup(var.config, "analytics_items", {}) : key => analytics_item
-  }
+  for_each = var.config.analytics_items
 
-  name                    = try(each.value.name, each.key)
+  name = coalesce(
+    each.value.name, each.key
+  )
+
   application_insights_id = azurerm_application_insights.appi.id
   type                    = each.value.type
   scope                   = each.value.scope
   content                 = each.value.content
-  function_alias          = try(each.value.function_alias, null)
+  function_alias          = each.value.function_alias
 }
 
 # api keys
 resource "azurerm_application_insights_api_key" "api_key" {
-  for_each = {
-    for key, api_key in lookup(var.config, "api_keys", {}) : key => api_key
-  }
+  for_each = var.config.api_keys
 
-  name                    = try(each.value.name, each.key)
+  name = coalesce(
+    each.value.name, each.key
+  )
+
   application_insights_id = azurerm_application_insights.appi.id
-  read_permissions        = try(each.value.read_permissions, null)
-  write_permissions       = try(each.value.write_permissions, null)
+  read_permissions        = each.value.read_permissions
+  write_permissions       = each.value.write_permissions
 }
 
 # smart detection rules
 resource "azurerm_application_insights_smart_detection_rule" "sdr" {
-  for_each = {
-    for key, sdr in lookup(var.config, "smart_detection_rules", {}) : key => sdr
-  }
+  for_each = var.config.smart_detection_rules
 
-  name                               = try(each.value.name, each.key)
+  name = coalesce(
+    each.value.name, each.key
+  )
+
   application_insights_id            = azurerm_application_insights.appi.id
-  enabled                            = try(each.value.enabled, true)
-  send_emails_to_subscription_owners = try(each.value.send_emails_to_subscription_owners, true)
-  additional_email_recipients        = try(each.value.additional_email_recipients, [])
+  enabled                            = each.value.enabled
+  send_emails_to_subscription_owners = each.value.send_emails_to_subscription_owners
+  additional_email_recipients        = each.value.additional_email_recipients
 }
 
 # standard web tests
 resource "azurerm_application_insights_standard_web_test" "swt" {
-  for_each = {
-    for key, swt in lookup(var.config, "standard_web_tests", {}) : key => swt
-  }
+  for_each = var.config.standard_web_tests
 
-  name                    = try(each.value.name, each.key)
-  resource_group_name     = coalesce(lookup(var.config, "resource_group", null), var.resource_group)
-  location                = coalesce(lookup(var.config, "location", null), var.location)
+  resource_group_name = coalesce(
+    lookup(
+      var.config, "resource_group_name", null
+    ), var.resource_group_name
+  )
+
+  location = coalesce(
+    lookup(var.config, "location", null
+    ), var.location
+  )
+
+  name = coalesce(
+    each.value.name, each.key
+  )
+
   application_insights_id = azurerm_application_insights.appi.id
   geo_locations           = each.value.geo_locations
-  description             = try(each.value.description, null)
-  enabled                 = try(each.value.enabled, null)
-  frequency               = try(each.value.frequency, 300)
-  retry_enabled           = try(each.value.retry_enabled, null)
-  tags                    = try(var.config.tags, var.tags, {})
-  timeout                 = try(each.value.timeout, 30)
+  description             = each.value.description
+  enabled                 = each.value.enabled
+  frequency               = each.value.frequency
+  retry_enabled           = each.value.retry_enabled
+  timeout                 = each.value.timeout
+
+  tags = coalesce(
+    var.config.tags, var.tags
+  )
 
   dynamic "request" {
-    for_each = lookup(each.value, "request", null) != null ? [each.value.request] : []
+    for_each = each.value.request != null ? [each.value.request] : []
     content {
       url                              = request.value.url
-      body                             = try(request.value.body, null)
-      follow_redirects_enabled         = try(request.value.follow_redirects_enabled, true)
-      http_verb                        = try(request.value.http_verb, "GET")
-      parse_dependent_requests_enabled = try(request.value.parse_dependent_requests_enabled, true)
+      body                             = request.value.body
+      follow_redirects_enabled         = request.value.follow_redirects_enabled
+      http_verb                        = request.value.http_verb
+      parse_dependent_requests_enabled = request.value.parse_dependent_requests_enabled
 
       dynamic "header" {
-        for_each = lookup(request.value, "header", null) != null ? [request.value.header] : []
+        for_each = request.value.header != null ? [request.value.header] : []
         content {
           name  = header.value.name
           value = header.value.value
@@ -97,18 +122,20 @@ resource "azurerm_application_insights_standard_web_test" "swt" {
   }
 
   dynamic "validation_rules" {
-    for_each = lookup(each.value, "validation_rules", null) != null ? [each.value.validation_rules] : []
+    for_each = each.value.validation_rules != null ? [each.value.validation_rules] : []
+
     content {
-      expected_status_code        = try(validation_rules.value.expected_status_code, 200)
-      ssl_cert_remaining_lifetime = try(validation_rules.value.ssl_cert_remaining_lifetime, null)
-      ssl_check_enabled           = try(validation_rules.value.ssl_check_enabled, null)
+      expected_status_code        = validation_rules.value.expected_status_code
+      ssl_cert_remaining_lifetime = validation_rules.value.ssl_cert_remaining_lifetime
+      ssl_check_enabled           = validation_rules.value.ssl_check_enabled
 
       dynamic "content" {
-        for_each = lookup(validation_rules.value, "content", null) != null ? [validation_rules.value.content] : []
+        for_each = validation_rules.value.content != null ? [validation_rules.value.content] : []
+
         content {
           content_match      = content.value.content_match
-          ignore_case        = try(content.value.ignore_case, null)
-          pass_if_text_found = try(content.value.pass_if_text_found, null)
+          ignore_case        = content.value.ignore_case
+          pass_if_text_found = content.value.pass_if_text_found
         }
       }
     }
@@ -117,81 +144,116 @@ resource "azurerm_application_insights_standard_web_test" "swt" {
 
 # web tests
 resource "azurerm_application_insights_web_test" "wt" {
-  for_each = {
-    for key, wt in lookup(var.config, "web_tests", {}) : key => wt
-  }
+  for_each = var.config.web_tests
 
-  name                    = try(each.value.name, each.key)
-  location                = coalesce(lookup(var.config, "location", null), var.location)
-  resource_group_name     = coalesce(lookup(var.config, "resource_group", null), var.resource_group)
+  resource_group_name = coalesce(
+    lookup(
+      var.config, "resource_group_name", null
+    ), var.resource_group_name
+  )
+
+  location = coalesce(
+    lookup(var.config, "location", null
+    ), var.location
+  )
+
+  name = coalesce(
+    each.value.name, each.key
+  )
+
   application_insights_id = azurerm_application_insights.appi.id
   kind                    = each.value.kind
   geo_locations           = each.value.geo_locations
   configuration           = each.value.configuration
-  frequency               = try(each.value.frequency, 300)
-  timeout                 = try(each.value.timeout, 30)
-  enabled                 = try(each.value.enabled, null)
-  retry_enabled           = try(each.value.retry_enabled, null)
-  description             = try(each.value.description, null)
-  tags                    = try(var.config.tags, var.tags, {})
+  frequency               = each.value.frequency
+  timeout                 = each.value.timeout
+  enabled                 = each.value.enabled
+  retry_enabled           = each.value.retry_enabled
+  description             = each.value.description
+
+  tags = coalesce(
+    var.config.tags, var.tags
+  )
 }
 
 # workbooks
 resource "azurerm_application_insights_workbook" "wb" {
-  for_each = {
-    for key, workbook in lookup(var.config, "workbooks", {}) : key => workbook
-  }
+  for_each = var.config.workbooks
 
-  name                 = try(each.value.name, each.key)
-  resource_group_name  = coalesce(lookup(var.config, "resource_group", null), var.resource_group)
-  location             = coalesce(lookup(var.config, "location", null), var.location)
-  display_name         = try(each.value.display_name, each.key)
-  description          = try(each.value.description, null)
-  storage_container_id = try(each.value.storage_container_id, null)
-  category             = try(each.value.category, "workbook")
+  resource_group_name = coalesce(
+    lookup(
+      var.config, "resource_group_name", null
+    ), var.resource_group_name
+  )
+
+  location = coalesce(
+    lookup(var.config, "location", null
+    ), var.location
+  )
+
+  name = coalesce(
+    each.value.name, each.key
+  )
+
+  display_name = coalesce(
+    each.value.display_name, each.key
+  )
+
+  description          = each.value.description
+  storage_container_id = each.value.storage_container_id
+  category             = each.value.category
   data_json            = each.value.data_json
-  source_id            = try(lower(lookup(each.value, "source_id", azurerm_application_insights.appi.id)), null)
+  source_id            = coalesce(each.value.source_id, lower(azurerm_application_insights.appi.id))
 
   dynamic "identity" {
-    for_each = lookup(each.value, "identity", null) != null ? [each.value.identity] : []
+    for_each = each.value.identity != null ? [each.value.identity] : []
+
     content {
       type         = "UserAssigned"
-      identity_ids = try(identity.value.identity_ids, null)
+      identity_ids = identity.value.identity_ids
     }
   }
 
-  tags = try(
-    var.config.tags, var.tags, {}
+  tags = coalesce(
+    var.config.tags, var.tags
   )
 }
 
 # workbook templates
 resource "azurerm_application_insights_workbook_template" "tmpl" {
-  for_each = {
-    for key, template in lookup(var.config, "workbook_templates", {}) : key => template
-  }
+  for_each = var.config.workbook_templates
 
-  name                = try(each.value.name, each.key)
-  resource_group_name = coalesce(lookup(var.config, "resource_group", null), var.resource_group)
-  location            = coalesce(lookup(var.config, "location", null), var.location)
-  template_data       = each.value.source
-  priority            = try(each.value.priority, null)
-  localized           = try(each.value.localized, null)
-  author              = try(each.value.author, null)
+  resource_group_name = coalesce(
+    lookup(
+      var.config, "resource_group_name", null
+    ), var.resource_group_name
+  )
 
-  tags = try(
-    var.config.tags, var.tags, {}
+  location = coalesce(
+    lookup(var.config, "location", null
+    ), var.location
+  )
+
+  name = coalesce(
+    each.value.name, each.key
+  )
+
+  template_data = each.value.source
+  priority      = each.value.priority
+  localized     = each.value.localized
+  author        = each.value.author
+
+  tags = coalesce(
+    var.config.tags, var.tags
   )
 
   dynamic "galleries" {
-    for_each = try(
-      each.value.galleries, {}
-    )
+    for_each = each.value.galleries
 
     content {
-      category      = try(galleries.value.category, "workbook")
+      category      = galleries.value.category
       name          = galleries.value.name
-      order         = try(galleries.value.order, 100)
+      order         = galleries.value.order
       resource_type = galleries.value.resource_type
       type          = galleries.value.type
     }

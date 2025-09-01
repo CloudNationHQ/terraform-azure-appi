@@ -1,6 +1,6 @@
 module "naming" {
   source  = "cloudnationhq/naming/azure"
-  version = "~> 0.22"
+  version = "~> 0.24"
 
   suffix = ["demo", "dev"]
 }
@@ -19,33 +19,33 @@ module "rg" {
 
 module "analytics" {
   source  = "cloudnationhq/law/azure"
-  version = "~> 2.0"
+  version = "~> 3.0"
 
   workspace = {
-    name           = module.naming.log_analytics_workspace.name_unique
-    location       = module.rg.groups.demo.location
-    resource_group = module.rg.groups.demo.name
+    name                = module.naming.log_analytics_workspace.name_unique
+    location            = module.rg.groups.demo.location
+    resource_group_name = module.rg.groups.demo.name
   }
 }
 
 module "appi" {
   source  = "cloudnationhq/appi/azure"
-  version = "~> 2.0"
+  version = "~> 3.0"
 
   config = {
-    name             = module.naming.application_insights.name
-    resource_group   = module.rg.groups.demo.name
-    location         = module.rg.groups.demo.location
-    application_type = "web"
-    workspace_id     = module.analytics.workspace.id
+    name                = module.naming.application_insights.name
+    resource_group_name = module.rg.groups.demo.name
+    location            = module.rg.groups.demo.location
+    application_type    = "web"
+    workspace_id        = module.analytics.workspace.id
 
     analytics_items = {
       request_volume_by_endpoint = {
         name    = "Request Volume by Endpoint"
         content = <<KQL
-requests
-| summarize RequestCount = count() by name
-| order by RequestCount desc
+        requests
+        | summarize RequestCount = count() by name
+        | order by RequestCount desc
         KQL
         scope   = "shared"
         type    = "query"
@@ -54,10 +54,10 @@ requests
       failed_requests_by_status_code = {
         name    = "Failed Requests by Status Code"
         content = <<KQL
-requests
-| where success == false
-| summarize FailedRequests = count() by resultCode
-| order by FailedRequests desc
+        requests
+        | where success == false
+        | summarize FailedRequests = count() by resultCode
+        | order by FailedRequests desc
         KQL
         scope   = "shared"
         type    = "query"
@@ -66,9 +66,9 @@ requests
       average_server_response_time = {
         name    = "Average Server Response Time"
         content = <<KQL
-requests
-| summarize AvgResponseTime = avg(duration) by bin(timestamp, 1h)
-| order by timestamp asc
+        requests
+        | summarize AvgResponseTime = avg(duration) by bin(timestamp, 1h)
+        | order by timestamp asc
         KQL
         scope   = "shared"
         type    = "query"
