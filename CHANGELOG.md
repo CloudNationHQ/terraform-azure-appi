@@ -1,5 +1,16 @@
 # Changelog
 
+## [3.0.0](https://github.com/CloudNationHQ/terraform-azure-appi/compare/v2.5.0...v3.0.0) (2025-09-01)
+
+
+### ⚠ BREAKING CHANGES
+
+* this change causes recreates
+
+### Features
+
+* add type definitions and changed data structure ([#27](https://github.com/CloudNationHQ/terraform-azure-appi/issues/27)) ([1b4c499](https://github.com/CloudNationHQ/terraform-azure-appi/commit/1b4c499a25bff366595f3651a14f980f2b3f0d88))
+
 ## [2.5.0](https://github.com/CloudNationHQ/terraform-azure-appi/compare/v2.4.0...v2.5.0) (2025-04-10)
 
 
