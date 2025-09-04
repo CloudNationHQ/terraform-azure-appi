@@ -175,14 +175,6 @@ Type: `string`
 
 Default: `null`
 
-### <a name="input_naming"></a> [naming](#input\_naming)
-
-Description: contains naming convention
-
-Type: `map(string)`
-
-Default: `{}`
-
 ### <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name)
 
 Description: default resource group to be used.
@@ -203,6 +195,10 @@ Default: `{}`
 
 The following outputs are exported:
 
+### <a name="output_analytics_items"></a> [analytics\_items](#output\_analytics\_items)
+
+Description: analytics items for application insights
+
 ### <a name="output_api_keys"></a> [api\_keys](#output\_api\_keys)
 
 Description: api keys for applications insights
@@ -210,6 +206,26 @@ Description: api keys for applications insights
 ### <a name="output_config"></a> [config](#output\_config)
 
 Description: configuration for applications insights
+
+### <a name="output_smart_detection_rules"></a> [smart\_detection\_rules](#output\_smart\_detection\_rules)
+
+Description: smart detection rules for application insights
+
+### <a name="output_standard_web_tests"></a> [standard\_web\_tests](#output\_standard\_web\_tests)
+
+Description: standard web tests for application insights
+
+### <a name="output_web_tests"></a> [web\_tests](#output\_web\_tests)
+
+Description: web tests for application insights
+
+### <a name="output_workbook_templates"></a> [workbook\_templates](#output\_workbook\_templates)
+
+Description: workbook templates for application insights
+
+### <a name="output_workbooks"></a> [workbooks](#output\_workbooks)
+
+Description: workbooks for application insights
 <!-- END_TF_DOCS -->
 
 ## Goals
