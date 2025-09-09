@@ -14,10 +14,10 @@ func TestApplyAllParallel(t *testing.T) {
 	validor.TestApplyAllParallel(t)
 }
 
-func TestApplyAllLocal(t *testing.T) {
-	validor.TestApplyAllLocal(t)
-}
-
 func TestApplyAllSequential(t *testing.T) {
 	validor.TestApplyAllSequential(t)
+}
+
+func TestApplyAllLocal(t *testing.T) {
+	validor.TestApplyAllLocal(t)
 }
