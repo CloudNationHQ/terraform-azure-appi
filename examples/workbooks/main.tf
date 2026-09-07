@@ -7,7 +7,7 @@ module "naming" {
 
 module "rg" {
   source  = "cloudnationhq/rg/azure"
-  version = "~> 2.0"
+  version = "~> 3.0"
 
   groups = {
     demo = {
@@ -17,11 +17,22 @@ module "rg" {
   }
 }
 
-module "appi" {
-  source  = "cloudnationhq/appi/azure"
+module "uai" {
+  source  = "cloudnationhq/uai/azure"
   version = "~> 3.0"
 
-  config = {
+  identity = {
+    name                = module.naming.user_assigned_identity.name
+    resource_group_name = module.rg.groups.demo.name
+    location            = module.rg.groups.demo.location
+  }
+}
+
+module "appi" {
+  source  = "cloudnationhq/appi/azure"
+  version = "~> 4.0"
+
+  insights = {
     name                = module.naming.application_insights.name
     resource_group_name = module.rg.groups.demo.name
     location            = module.rg.groups.demo.location
@@ -33,6 +44,9 @@ module "appi" {
         display_name = "Requests Overview"
         description  = "Basic view of request counts and duration"
         category     = "workbook"
+        identity = {
+          identity_ids = [module.uai.identity.id]
+        }
         data_json = jsonencode({
           "version" : "Notebook/1.0",
           "items" : [

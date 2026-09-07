@@ -7,7 +7,7 @@ module "naming" {
 
 module "rg" {
   source  = "cloudnationhq/rg/azure"
-  version = "~> 2.0"
+  version = "~> 3.0"
 
   groups = {
     demo = {
@@ -19,9 +19,9 @@ module "rg" {
 
 module "appi" {
   source  = "cloudnationhq/appi/azure"
-  version = "~> 3.0"
+  version = "~> 4.0"
 
-  config = {
+  insights = {
     name                = module.naming.application_insights.name
     resource_group_name = module.rg.groups.demo.name
     location            = module.rg.groups.demo.location
@@ -38,6 +38,16 @@ module "appi" {
         request = {
           url = "https://www.myecommerce.com"
         }
+        validation_rules = {
+          expected_status_code        = 200
+          ssl_check_enabled           = true
+          ssl_cert_remaining_lifetime = 30
+          content = {
+            content_match      = "Welcome"
+            ignore_case        = true
+            pass_if_text_found = true
+          }
+        }
       }
 
       api_health_check = {
@@ -49,9 +59,14 @@ module "appi" {
         retry_enabled = false
         request = {
           url                              = "https://api.myecommerce.com/health"
-          http_verb                        = "GET"
+          http_verb                        = "POST"
+          body                             = "{\"probe\":\"health\"}"
           follow_redirects_enabled         = true
           parse_dependent_requests_enabled = false
+          header = {
+            name  = "Content-Type"
+            value = "application/json"
+          }
         }
       }
     }

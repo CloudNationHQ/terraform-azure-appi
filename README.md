@@ -27,32 +27,32 @@ The following requirements are needed by this module:
 
 - <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) (~> 1.0)
 
-- <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (~> 4.0)
+- <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (~> 5.0)
 
 ## Providers
 
 The following providers are used by this module:
 
-- <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) (~> 4.0)
+- <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) (~> 5.0)
 
 ## Resources
 
 The following resources are used by this module:
 
-- [azurerm_application_insights.appi](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/application_insights) (resource)
-- [azurerm_application_insights_analytics_item.analytics_item](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/application_insights_analytics_item) (resource)
-- [azurerm_application_insights_api_key.api_key](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/application_insights_api_key) (resource)
-- [azurerm_application_insights_smart_detection_rule.sdr](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/application_insights_smart_detection_rule) (resource)
-- [azurerm_application_insights_standard_web_test.swt](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/application_insights_standard_web_test) (resource)
-- [azurerm_application_insights_web_test.wt](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/application_insights_web_test) (resource)
-- [azurerm_application_insights_workbook.wb](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/application_insights_workbook) (resource)
-- [azurerm_application_insights_workbook_template.tmpl](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/application_insights_workbook_template) (resource)
+- [azurerm_application_insights.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/application_insights) (resource)
+- [azurerm_application_insights_analytics_item.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/application_insights_analytics_item) (resource)
+- [azurerm_application_insights_api_key.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/application_insights_api_key) (resource)
+- [azurerm_application_insights_smart_detection_rule.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/application_insights_smart_detection_rule) (resource)
+- [azurerm_application_insights_standard_web_test.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/application_insights_standard_web_test) (resource)
+- [azurerm_application_insights_web_test.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/application_insights_web_test) (resource)
+- [azurerm_application_insights_workbook.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/application_insights_workbook) (resource)
+- [azurerm_application_insights_workbook_template.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/application_insights_workbook_template) (resource)
 
 ## Required Inputs
 
 The following input variables are required:
 
-### <a name="input_config"></a> [config](#input\_config)
+### <a name="input_insights"></a> [insights](#input\_insights)
 
 Description: describes the application insights configuration
 
@@ -60,21 +60,21 @@ Type:
 
 ```hcl
 object({
-    name                                  = optional(string)
-    location                              = optional(string)
-    resource_group_name                   = optional(string)
-    application_type                      = string
-    daily_data_cap_in_gb                  = optional(number, 100)
-    daily_data_cap_notifications_disabled = optional(bool, false)
-    retention_in_days                     = optional(number, 90)
-    sampling_percentage                   = optional(number, 100)
-    disable_ip_masking                    = optional(bool, false)
-    workspace_id                          = optional(string)
-    local_authentication_disabled         = optional(bool, false)
-    internet_ingestion_enabled            = optional(bool, true)
-    internet_query_enabled                = optional(bool, true)
-    force_customer_storage_for_profiler   = optional(bool, false)
-    tags                                  = optional(map(string))
+    name                                 = optional(string)
+    location                             = optional(string)
+    resource_group_name                  = optional(string)
+    application_type                     = string
+    daily_data_cap_in_gb                 = optional(number)
+    daily_data_cap_notifications_enabled = optional(bool)
+    retention_in_days                    = optional(number)
+    sampling_percentage                  = optional(number)
+    ip_masking_enabled                   = optional(bool)
+    workspace_id                         = optional(string)
+    local_authentication_enabled         = optional(bool)
+    internet_ingestion_enabled           = optional(bool)
+    internet_query_enabled               = optional(bool)
+    force_customer_storage_for_profiler  = optional(bool)
+    tags                                 = optional(map(string))
     analytics_items = optional(map(object({
       name           = optional(string)
       type           = string
@@ -89,31 +89,31 @@ object({
     })), {})
     smart_detection_rules = optional(map(object({
       name                               = optional(string)
-      enabled                            = optional(bool, true)
-      send_emails_to_subscription_owners = optional(bool, true)
-      additional_email_recipients        = optional(set(string), [])
+      enabled                            = optional(bool)
+      send_emails_to_subscription_owners = optional(bool)
+      additional_email_recipients        = optional(set(string))
     })), {})
     standard_web_tests = optional(map(object({
       name          = optional(string)
       geo_locations = set(string)
       description   = optional(string)
       enabled       = optional(bool)
-      frequency     = optional(number, 300)
+      frequency     = optional(number)
       retry_enabled = optional(bool)
-      timeout       = optional(number, 30)
+      timeout       = optional(number)
       request = optional(object({
         url                              = string
         body                             = optional(string)
-        follow_redirects_enabled         = optional(bool, true)
-        http_verb                        = optional(string, "GET")
-        parse_dependent_requests_enabled = optional(bool, true)
+        follow_redirects_enabled         = optional(bool)
+        http_verb                        = optional(string)
+        parse_dependent_requests_enabled = optional(bool)
         header = optional(object({
           name  = string
           value = string
         }))
       }))
       validation_rules = optional(object({
-        expected_status_code        = optional(number, 200)
+        expected_status_code        = optional(number)
         ssl_cert_remaining_lifetime = optional(number)
         ssl_check_enabled           = optional(bool)
         content = optional(object({
@@ -128,8 +128,8 @@ object({
       kind          = string
       geo_locations = set(string)
       configuration = string
-      frequency     = optional(number, 300)
-      timeout       = optional(number, 30)
+      frequency     = optional(number)
+      timeout       = optional(number)
       enabled       = optional(bool)
       retry_enabled = optional(bool)
       description   = optional(string)
@@ -139,7 +139,7 @@ object({
       display_name         = optional(string)
       description          = optional(string)
       storage_container_id = optional(string)
-      category             = optional(string, "workbook")
+      category             = optional(string)
       data_json            = string
       source_id            = optional(string)
       identity = optional(object({
@@ -153,9 +153,9 @@ object({
       localized = optional(string)
       author    = optional(string)
       galleries = optional(map(object({
-        category      = optional(string, "workbook")
+        category      = string
         name          = string
-        order         = optional(number, 100)
+        order         = optional(number)
         resource_type = string
         type          = string
       })), {})
@@ -203,7 +203,7 @@ Description: analytics items for application insights
 
 Description: api keys for applications insights
 
-### <a name="output_config"></a> [config](#output\_config)
+### <a name="output_insights"></a> [insights](#output\_insights)
 
 Description: configuration for applications insights
 
