@@ -1,5 +1,16 @@
 # Changelog
 
+## [4.0.0](https://github.com/CloudNationHQ/terraform-azure-appi/compare/v3.0.1...v4.0.0) (2026-09-08)
+
+
+### ⚠ BREAKING CHANGES
+
+* Upgrade to azurerm v5 and module standards ([#38](https://github.com/CloudNationHQ/terraform-azure-appi/issues/38))
+
+### Features
+
+* Upgrade to azurerm v5 and module standards ([#38](https://github.com/CloudNationHQ/terraform-azure-appi/issues/38)) ([28851bb](https://github.com/CloudNationHQ/terraform-azure-appi/commit/28851bbf31bfd50f17581cd46da53ab3b946f233))
+
 ## [3.0.1](https://github.com/CloudNationHQ/terraform-azure-appi/compare/v3.0.0...v3.0.1) (2025-09-04)
 
 
