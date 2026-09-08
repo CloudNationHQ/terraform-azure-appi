@@ -7,7 +7,7 @@ module "naming" {
 
 module "rg" {
   source  = "cloudnationhq/rg/azure"
-  version = "~> 2.0"
+  version = "~> 3.0"
 
   groups = {
     demo = {
@@ -19,7 +19,7 @@ module "rg" {
 
 module "analytics" {
   source  = "cloudnationhq/law/azure"
-  version = "~> 3.0"
+  version = "~> 4.0"
 
   workspace = {
     name                = module.naming.log_analytics_workspace.name_unique
@@ -30,9 +30,9 @@ module "analytics" {
 
 module "appi" {
   source  = "cloudnationhq/appi/azure"
-  version = "~> 3.0"
+  version = "~> 4.0"
 
-  config = {
+  insights = {
     name                = module.naming.application_insights.name
     resource_group_name = module.rg.groups.demo.name
     location            = module.rg.groups.demo.location

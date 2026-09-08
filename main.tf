@@ -1,96 +1,86 @@
 # insights
-resource "azurerm_application_insights" "appi" {
+resource "azurerm_application_insights" "this" {
   resource_group_name = coalesce(
-    lookup(
-      var.config, "resource_group_name", null
-    ), var.resource_group_name
+    var.insights.resource_group_name, var.resource_group_name
   )
 
   location = coalesce(
-    lookup(var.config, "location", null
-    ), var.location
+    var.insights.location, var.location
   )
 
-  name                                  = var.config.name
-  application_type                      = var.config.application_type
-  daily_data_cap_in_gb                  = var.config.daily_data_cap_in_gb
-  daily_data_cap_notifications_disabled = var.config.daily_data_cap_notifications_disabled
-  retention_in_days                     = var.config.retention_in_days
-  sampling_percentage                   = var.config.sampling_percentage
-  disable_ip_masking                    = var.config.disable_ip_masking
-  workspace_id                          = var.config.workspace_id
-  local_authentication_disabled         = var.config.local_authentication_disabled
-  internet_ingestion_enabled            = var.config.internet_ingestion_enabled
-  internet_query_enabled                = var.config.internet_query_enabled
-  force_customer_storage_for_profiler   = var.config.force_customer_storage_for_profiler
+  name                                 = var.insights.name
+  application_type                     = var.insights.application_type
+  daily_data_cap_in_gb                 = var.insights.daily_data_cap_in_gb
+  daily_data_cap_notifications_enabled = var.insights.daily_data_cap_notifications_enabled
+  retention_in_days                    = var.insights.retention_in_days
+  sampling_percentage                  = var.insights.sampling_percentage
+  ip_masking_enabled                   = var.insights.ip_masking_enabled
+  workspace_id                         = var.insights.workspace_id
+  local_authentication_enabled         = var.insights.local_authentication_enabled
+  internet_ingestion_enabled           = var.insights.internet_ingestion_enabled
+  internet_query_enabled               = var.insights.internet_query_enabled
+  force_customer_storage_for_profiler  = var.insights.force_customer_storage_for_profiler
 
   tags = coalesce(
-    var.config.tags, var.tags
+    var.insights.tags, var.tags
   )
 }
 
-# analytics items
-resource "azurerm_application_insights_analytics_item" "analytics_item" {
-  for_each = var.config.analytics_items
+resource "azurerm_application_insights_analytics_item" "this" {
+  for_each = var.insights.analytics_items
 
   name = coalesce(
     each.value.name, each.key
   )
 
-  application_insights_id = azurerm_application_insights.appi.id
+  application_insights_id = azurerm_application_insights.this.id
   type                    = each.value.type
   scope                   = each.value.scope
   content                 = each.value.content
   function_alias          = each.value.function_alias
 }
 
-# api keys
-resource "azurerm_application_insights_api_key" "api_key" {
-  for_each = var.config.api_keys
+resource "azurerm_application_insights_api_key" "this" {
+  for_each = var.insights.api_keys
 
   name = coalesce(
     each.value.name, each.key
   )
 
-  application_insights_id = azurerm_application_insights.appi.id
+  application_insights_id = azurerm_application_insights.this.id
   read_permissions        = each.value.read_permissions
   write_permissions       = each.value.write_permissions
 }
 
-# smart detection rules
-resource "azurerm_application_insights_smart_detection_rule" "sdr" {
-  for_each = var.config.smart_detection_rules
+resource "azurerm_application_insights_smart_detection_rule" "this" {
+  for_each = var.insights.smart_detection_rules
 
   name = coalesce(
     each.value.name, each.key
   )
 
-  application_insights_id            = azurerm_application_insights.appi.id
+  application_insights_id            = azurerm_application_insights.this.id
   enabled                            = each.value.enabled
   send_emails_to_subscription_owners = each.value.send_emails_to_subscription_owners
   additional_email_recipients        = each.value.additional_email_recipients
 }
 
-# standard web tests
-resource "azurerm_application_insights_standard_web_test" "swt" {
-  for_each = var.config.standard_web_tests
+resource "azurerm_application_insights_standard_web_test" "this" {
+  for_each = var.insights.standard_web_tests
 
   resource_group_name = coalesce(
-    lookup(
-      var.config, "resource_group_name", null
-    ), var.resource_group_name
+    var.insights.resource_group_name, var.resource_group_name
   )
 
   location = coalesce(
-    lookup(var.config, "location", null
-    ), var.location
+    var.insights.location, var.location
   )
 
   name = coalesce(
     each.value.name, each.key
   )
 
-  application_insights_id = azurerm_application_insights.appi.id
+  application_insights_id = azurerm_application_insights.this.id
   geo_locations           = each.value.geo_locations
   description             = each.value.description
   enabled                 = each.value.enabled
@@ -99,11 +89,11 @@ resource "azurerm_application_insights_standard_web_test" "swt" {
   timeout                 = each.value.timeout
 
   tags = coalesce(
-    var.config.tags, var.tags
+    var.insights.tags, var.tags
   )
 
   dynamic "request" {
-    for_each = each.value.request != null ? [each.value.request] : []
+    for_each = each.value.request != null ? { "this" = each.value.request } : {}
     content {
       url                              = request.value.url
       body                             = request.value.body
@@ -112,7 +102,7 @@ resource "azurerm_application_insights_standard_web_test" "swt" {
       parse_dependent_requests_enabled = request.value.parse_dependent_requests_enabled
 
       dynamic "header" {
-        for_each = request.value.header != null ? [request.value.header] : []
+        for_each = request.value.header != null ? { "this" = request.value.header } : {}
         content {
           name  = header.value.name
           value = header.value.value
@@ -122,7 +112,7 @@ resource "azurerm_application_insights_standard_web_test" "swt" {
   }
 
   dynamic "validation_rules" {
-    for_each = each.value.validation_rules != null ? [each.value.validation_rules] : []
+    for_each = each.value.validation_rules != null ? { "this" = each.value.validation_rules } : {}
 
     content {
       expected_status_code        = validation_rules.value.expected_status_code
@@ -130,7 +120,7 @@ resource "azurerm_application_insights_standard_web_test" "swt" {
       ssl_check_enabled           = validation_rules.value.ssl_check_enabled
 
       dynamic "content" {
-        for_each = validation_rules.value.content != null ? [validation_rules.value.content] : []
+        for_each = validation_rules.value.content != null ? { "this" = validation_rules.value.content } : {}
 
         content {
           content_match      = content.value.content_match
@@ -142,26 +132,22 @@ resource "azurerm_application_insights_standard_web_test" "swt" {
   }
 }
 
-# web tests
-resource "azurerm_application_insights_web_test" "wt" {
-  for_each = var.config.web_tests
+resource "azurerm_application_insights_web_test" "this" {
+  for_each = var.insights.web_tests
 
   resource_group_name = coalesce(
-    lookup(
-      var.config, "resource_group_name", null
-    ), var.resource_group_name
+    var.insights.resource_group_name, var.resource_group_name
   )
 
   location = coalesce(
-    lookup(var.config, "location", null
-    ), var.location
+    var.insights.location, var.location
   )
 
   name = coalesce(
     each.value.name, each.key
   )
 
-  application_insights_id = azurerm_application_insights.appi.id
+  application_insights_id = azurerm_application_insights.this.id
   kind                    = each.value.kind
   geo_locations           = each.value.geo_locations
   configuration           = each.value.configuration
@@ -172,23 +158,19 @@ resource "azurerm_application_insights_web_test" "wt" {
   description             = each.value.description
 
   tags = coalesce(
-    var.config.tags, var.tags
+    var.insights.tags, var.tags
   )
 }
 
-# workbooks
-resource "azurerm_application_insights_workbook" "wb" {
-  for_each = var.config.workbooks
+resource "azurerm_application_insights_workbook" "this" {
+  for_each = var.insights.workbooks
 
   resource_group_name = coalesce(
-    lookup(
-      var.config, "resource_group_name", null
-    ), var.resource_group_name
+    var.insights.resource_group_name, var.resource_group_name
   )
 
   location = coalesce(
-    lookup(var.config, "location", null
-    ), var.location
+    var.insights.location, var.location
   )
 
   name = coalesce(
@@ -203,10 +185,10 @@ resource "azurerm_application_insights_workbook" "wb" {
   storage_container_id = each.value.storage_container_id
   category             = each.value.category
   data_json            = each.value.data_json
-  source_id            = coalesce(each.value.source_id, lower(azurerm_application_insights.appi.id))
+  source_id            = coalesce(each.value.source_id, lower(azurerm_application_insights.this.id))
 
   dynamic "identity" {
-    for_each = each.value.identity != null ? [each.value.identity] : []
+    for_each = each.value.identity != null ? { "this" = each.value.identity } : {}
 
     content {
       type         = "UserAssigned"
@@ -215,23 +197,19 @@ resource "azurerm_application_insights_workbook" "wb" {
   }
 
   tags = coalesce(
-    var.config.tags, var.tags
+    var.insights.tags, var.tags
   )
 }
 
-# workbook templates
-resource "azurerm_application_insights_workbook_template" "tmpl" {
-  for_each = var.config.workbook_templates
+resource "azurerm_application_insights_workbook_template" "this" {
+  for_each = var.insights.workbook_templates
 
   resource_group_name = coalesce(
-    lookup(
-      var.config, "resource_group_name", null
-    ), var.resource_group_name
+    var.insights.resource_group_name, var.resource_group_name
   )
 
   location = coalesce(
-    lookup(var.config, "location", null
-    ), var.location
+    var.insights.location, var.location
   )
 
   name = coalesce(
@@ -244,7 +222,7 @@ resource "azurerm_application_insights_workbook_template" "tmpl" {
   author        = each.value.author
 
   tags = coalesce(
-    var.config.tags, var.tags
+    var.insights.tags, var.tags
   )
 
   dynamic "galleries" {
