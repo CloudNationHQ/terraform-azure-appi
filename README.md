@@ -143,7 +143,8 @@ object({
       data_json            = string
       source_id            = optional(string)
       identity = optional(object({
-        identity_ids = set(string)
+        type         = string
+        identity_ids = optional(list(string))
       }))
     })), {})
     workbook_templates = optional(map(object({
@@ -250,11 +251,7 @@ The `custom_action` block in auto_heal_setting is only supported for Windows web
 
 We welcome contributions from the community! Whether it's reporting a bug, suggesting a new feature, or submitting a pull request, your input is highly valued.
 
-For more information, please see our contribution [guidelines](./CONTRIBUTING.md). <br><br>
-
-<a href="https://github.com/cloudnationhq/terraform-azure-appi/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=cloudnationhq/terraform-azure-appi" />
-</a>
+For more information, please see our contribution [guidelines](./CONTRIBUTING.md).
 
 ## License
 

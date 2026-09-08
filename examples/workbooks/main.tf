@@ -45,6 +45,7 @@ module "appi" {
         description  = "Basic view of request counts and duration"
         category     = "workbook"
         identity = {
+          type         = "UserAssigned"
           identity_ids = [module.uai.identity.id]
         }
         data_json = jsonencode({

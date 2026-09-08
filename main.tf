@@ -94,6 +94,7 @@ resource "azurerm_application_insights_standard_web_test" "this" {
 
   dynamic "request" {
     for_each = each.value.request != null ? { "this" = each.value.request } : {}
+
     content {
       url                              = request.value.url
       body                             = request.value.body
@@ -103,6 +104,7 @@ resource "azurerm_application_insights_standard_web_test" "this" {
 
       dynamic "header" {
         for_each = request.value.header != null ? { "this" = request.value.header } : {}
+
         content {
           name  = header.value.name
           value = header.value.value
@@ -191,7 +193,7 @@ resource "azurerm_application_insights_workbook" "this" {
     for_each = each.value.identity != null ? { "this" = each.value.identity } : {}
 
     content {
-      type         = "UserAssigned"
+      type         = identity.value.type
       identity_ids = identity.value.identity_ids
     }
   }

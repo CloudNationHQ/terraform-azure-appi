@@ -84,7 +84,8 @@ variable "insights" {
       data_json            = string
       source_id            = optional(string)
       identity = optional(object({
-        identity_ids = set(string)
+        type         = string
+        identity_ids = optional(list(string))
       }))
     })), {})
     workbook_templates = optional(map(object({
