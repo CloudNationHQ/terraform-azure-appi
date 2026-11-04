@@ -116,6 +116,7 @@ object({
         expected_status_code        = optional(number)
         ssl_cert_remaining_lifetime = optional(number)
         ssl_check_enabled           = optional(bool)
+        ignore_status_code          = optional(bool)
         content = optional(object({
           content_match      = string
           ignore_case        = optional(bool)
