@@ -243,7 +243,7 @@ Using a dedicated module, we've developed a naming convention for resources that
 
 Full examples detailing all usages, along with integrations with dependency modules, are located in the examples directory.
 
-To update the module's documentation run `make doc`
+To update the module's documentation run `make docs`
 
 The `custom_action` block in auto_heal_setting is only supported for Windows web apps. Linux web apps do not support custom actions due to azure platform limitations.
 
