@@ -42,6 +42,7 @@ module "appi" {
           expected_status_code        = 200
           ssl_check_enabled           = true
           ssl_cert_remaining_lifetime = 30
+          ignore_status_code          = false
           content = {
             content_match      = "Welcome"
             ignore_case        = true
