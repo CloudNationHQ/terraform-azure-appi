@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.1.0](https://github.com/CloudNationHQ/terraform-azure-appi/compare/v4.0.0...v4.1.0) (2026-11-25)
+
+
+### Features
+
+* add ignore_status_code to standard web test validation_rules block ([#44](https://github.com/CloudNationHQ/terraform-azure-appi/issues/44)) ([bfe67f9](https://github.com/CloudNationHQ/terraform-azure-appi/commit/bfe67f9455af4adede91e8ffc6979d80ebd5e66e))
+
 ## [4.0.0](https://github.com/CloudNationHQ/terraform-azure-appi/compare/v3.0.1...v4.0.0) (2026-09-08)
 
 
