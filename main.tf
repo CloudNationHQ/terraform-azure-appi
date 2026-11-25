@@ -120,6 +120,7 @@ resource "azurerm_application_insights_standard_web_test" "this" {
       expected_status_code        = validation_rules.value.expected_status_code
       ssl_cert_remaining_lifetime = validation_rules.value.ssl_cert_remaining_lifetime
       ssl_check_enabled           = validation_rules.value.ssl_check_enabled
+      ignore_status_code          = validation_rules.value.ignore_status_code
 
       dynamic "content" {
         for_each = validation_rules.value.content != null ? { "this" = validation_rules.value.content } : {}
